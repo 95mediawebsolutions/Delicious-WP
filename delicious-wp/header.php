@@ -8,12 +8,16 @@
     <?php wp_head();?>
 </head>
 
-<body>
+<body <?php body_class();?>>
+<?php wp_body_open(); ?>
+
+<?php if(get_theme_mod('show_preloader')):?>
     <!-- Preloader -->
     <div id="preloader">
         <i class="circle-preloader"></i>
-        <img src="img/core-img/salad.png" alt="">
+        <img src="<?php echo esc_html(get_theme_mod('delicious_preloader'));?>" alt="<?php echo bloginfo('name');?>">
     </div>
+<?php endif;?>
 
     <!-- Search Wrapper -->
     <div class="search-wrapper">
@@ -23,14 +27,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <form action="#" method="post">
-                        <input type="search" name="search" placeholder="Type any keywords...">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                <?php $unique_id = esc_attr(uniqid());?>
+                    <form action="<?php echo esc_url(home_url('/'));?>" method="get">
+                        <input type="search" name="s" placeholder="<?php _e('Type any keywords...', 'delicious-wp')?>" id="<?php echo $unique_id; ?>">
+                        <button type="submit" class="btns"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- ##### Header Area Start ##### -->
     <header class="header-area">
@@ -41,12 +47,21 @@
                 <div class="row h-100 align-items-center justify-content-between">
                     <!-- Breaking News -->
                     <div class="col-12 col-sm-6">
-                        <div class="breaking-news">
+                        <div class="breaking-news d-none d-sm-block">
                             <div id="breakingNewsTicker" class="ticker">
                                 <ul>
-                                    <li><a href="#">Hello World!</a></li>
-                                    <li><a href="#">Welcome to Colorlib Family.</a></li>
-                                    <li><a href="#">Hello Delicious!</a></li>
+                                    <?php
+                                        $args = array(
+                                            'post_type' => 'post',
+                                            'posts_per_page' => 2,
+                                            'order_by'     => 'ASC'
+                                        );
+
+                                        $recent_post = new WP_Query($args); while(have_posts()) : the_post();
+                                    ?>
+                                      <li><a href="<?php the_permalink();?>"><?php the_title()?></a></li>
+
+                                    <?php endwhile; wp_reset_postdata();?>
                                 </ul>
                             </div>
                         </div>
@@ -55,12 +70,12 @@
                     <!-- Top Social Info -->
                     <div class="col-12 col-sm-6">
                         <div class="top-social-info text-right">
-                            <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-behance" aria-hidden="true"></i></a>
-                            <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                            <?php  echo esc_html( delicious_social_media_display());?>
+                            <?php if(get_theme_mod('set_search_icon')):?>
+                             <div class="search-btn">
+                                    <a href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
+                            </div>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
@@ -73,9 +88,12 @@
                 <div class="container">
                     <!-- Menu -->
                     <nav class="classy-navbar justify-content-between" id="deliciousNav">
-
-                        <!-- Logo -->
-                        <a class="nav-brand" href="index.html"><img src="img/core-img/logo.png" alt=""></a>
+                     <!-- Logo -->
+                        <?php if(has_custom_logo()):?>
+                        <?php the_custom_logo()?>
+                        <?php else:?>
+                        <a class="navbar-brand" href="<?php echo esc_url(home_url('/'));?>"><h1><?php bloginfo('title');?></h1></a>
+                        <?php endif;?>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -91,92 +109,24 @@
                             </div>
 
                             <!-- Nav Start -->
-                            <div class="classynav">
-                                <ul>
-                                    <li class="active"><a href="index.html">Home</a></li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="dropdown">
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="about.html">About Us</a></li>
-                                            <li><a href="blog-post.html">Blog Post</a></li>
-                                            <li><a href="receipe-post.html">Receipe Post</a></li>
-                                            <li><a href="contact.html">Contact</a></li>
-                                            <li><a href="elements.html">Elements</a></li>
-                                            <li><a href="#">Dropdown</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="index.html">Home</a></li>
-                                                    <li><a href="about.html">About Us</a></li>
-                                                    <li><a href="blog-post.html">Blog Post</a></li>
-                                                    <li><a href="receipe-post.html">Receipe Post</a></li>
-                                                    <li><a href="contact.html">Contact</a></li>
-                                                    <li><a href="elements.html">Elements</a></li>
-                                                    <li><a href="#">Dropdown</a>
-                                                        <ul class="dropdown">
-                                                            <li><a href="index.html">Home</a></li>
-                                                            <li><a href="about.html">About Us</a></li>
-                                                            <li><a href="blog-post.html">Blog Post</a></li>
-                                                            <li><a href="receipe-post.html">Receipe Post</a></li>
-                                                            <li><a href="contact.html">Contact</a></li>
-                                                            <li><a href="elements.html">Elements</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Mega Menu</a>
-                                        <div class="megamenu">
-                                            <ul class="single-mega cn-col-4">
-                                                <li class="title">Catagory</li>
-                                                <li><a href="index.html">Home</a></li>
-                                                <li><a href="about.html">About Us</a></li>
-                                                <li><a href="blog-post.html">Blog Post</a></li>
-                                                <li><a href="receipe-post.html">Receipe Post</a></li>
-                                                <li><a href="contact.html">Contact</a></li>
-                                                <li><a href="elements.html">Elements</a></li>
-                                            </ul>
-                                            <ul class="single-mega cn-col-4">
-                                                <li class="title">Catagory</li>
-                                                <li><a href="index.html">Home</a></li>
-                                                <li><a href="about.html">About Us</a></li>
-                                                <li><a href="blog-post.html">Blog Post</a></li>
-                                                <li><a href="receipe-post.html">Receipe Post</a></li>
-                                                <li><a href="contact.html">Contact</a></li>
-                                                <li><a href="elements.html">Elements</a></li>
-                                            </ul>
-                                            <ul class="single-mega cn-col-4">
-                                                <li class="title">Catagory</li>
-                                                <li><a href="index.html">Home</a></li>
-                                                <li><a href="about.html">About Us</a></li>
-                                                <li><a href="blog-post.html">Blog Post</a></li>
-                                                <li><a href="receipe-post.html">Receipe Post</a></li>
-                                                <li><a href="contact.html">Contact</a></li>
-                                                <li><a href="elements.html">Elements</a></li>
-                                            </ul>
-                                            <div class="single-mega cn-col-4">
-                                                <div class="receipe-slider owl-carousel">
-                                                    <a href="#"><img src="img/bg-img/bg1.jpg" alt=""></a>
-                                                    <a href="#"><img src="img/bg-img/bg6.jpg" alt=""></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li><a href="receipe-post.html">Receipies</a></li>
-                                    <li><a href="receipe-post.html">4 Vegans</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                </ul>
+                                <?php
+                                wp_nav_menu( array(
+                                'theme_location'    => 'primary',
+                                'depth'             => 3,
+                                'container_class'   => 'classynav',
+                                'walker'         => new WalkerNav(),
+                                ) );
+                                ?>
 
-                                <!-- Newsletter Form -->
-                                <div class="search-btn">
-                                    <i class="fa fa-search" aria-hidden="true"></i>
-                                </div>
 
-                            </div>
                             <!-- Nav End -->
                         </div>
                     </nav>
+
                 </div>
+
             </div>
+
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
